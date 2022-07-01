@@ -1,27 +1,30 @@
 import React, { Component } from "react";
 import './App.css';
 import uuid from 'react-uuid';
-import { FaChevronDown } from "react-icons/fa";
-import  Button  from "@mui/material/Button";
+import TodoItem from './Components/TodoItem';
+import Input from "./Components/Input";
+import Footer from "./Components/Footer";
+import Button from "./Components/Button";
 
 class App extends Component{
   constructor(props) {
     super(props);
 
-    // getInitialState
+    // InitialState
     this.state = {
       all: [],
   newToDo:"",
   mode:"all",
-  editToDo:"",
-  editToDoId:""
+  editToDo:""
     };
   }
-
+  
+  //OnChange for newTodo Input
   handleChange=(event)=>{
     this.setState({newToDo:event.target.value});
   };
 
+  //NewTodo After pressing enter
   handleKeypress = e => {
     //it triggers by pressing the enter key
   if (e.key==='Enter') {
@@ -30,6 +33,7 @@ class App extends Component{
   }
 };
 
+  //Adding NewTodo to the state
   newTodo=()=>{
     this.setState({
       all:[
@@ -38,7 +42,7 @@ class App extends Component{
       ]});
   };
 
-
+  //Checkbox for todo
   toggleDone = (todo) =>
   this.setState({
     all: this.state.all.map((item) =>
@@ -46,33 +50,45 @@ class App extends Component{
     ),
   });
 
+  //deleting todo
   delete=(todo)=>{
     this.setState({ all: this.state.all.filter((item) => this.state.all.indexOf(item) !== this.state.all.indexOf(todo)) });
   }
 
-  handleEdit= e =>{
-    this.setState({editToDo : e.target.value,editToDoId:e.target.id});
-  };
-
-  editTodo=()=>{
+  //Changing isEdit state of todo
+  edit = (todo) => {
     this.setState({
       all: this.state.all.map((item) =>
-        item.id === this.state.editToDoId ? { ...item, action:this.state.editToDo ,isEdit:false} : item
+        item.action === todo.action ? { ...item, isEdit: !item.isEdit } : item
+      ),
+      editToDo: todo.action
+    });
+  }
+
+  //Onchange for edit input
+  handleEdit= e =>{
+    this.setState({editToDo : e.target.value});
+  };
+
+  //Edit Todo after pressing Enter
+  handleKeyEdit = e => {
+    //it triggers by pressing the enter key
+  if (e.key==='Enter') {
+    this.editTodo(e.target.id);
+    this.setState({editToDo:""});
+  }
+};
+
+  //Changing Edit Todo in state
+  editTodo=(id)=>{
+    this.setState({
+      all: this.state.all.map((item) =>
+        item.id === id ? { ...item, action:this.state.editToDo ,isEdit:false} : item
       )
     });
   }
 
-
-  handleKeyEdit = e => {
-    //it triggers by pressing the enter key
-  if (e.key==='Enter') {
-    this.editTodo();
-    this.setState({editToDo:"",editToDoId:""});
-  }
-};
-
-
-
+//Getting filtered array
 listToMap=()=> {
   if(this.state.mode==="active")
   {
@@ -86,19 +102,9 @@ listToMap=()=> {
   }
   }
 
-
-edit = (todo) => {
-  this.setState({
-    all: this.state.all.map((item) =>
-      item.action === todo.action ? { ...item, isEdit: !item.isEdit } : item
-    ),
-    editToDo: todo.action
-  });
-}
-  
-
-  btnClick = () =>{
-    if(this.countCompleted()<this.count()){
+ //Button to (un)check all todos
+ checkAll = () =>{
+    if(this.count("completed")<this.count()){
   this.setState({ all : this.state.all.map((item) =>
   item = { ...item, done: true })})
   }
@@ -108,56 +114,41 @@ edit = (todo) => {
   }
 }
 
-active=()=>{
-  this.setState({mode:"active"});
+//Changing mode in the state
+setMode=(mode)=>{
+     this.setState({mode:mode});
 }
 
-showAll=()=>{
-  this.setState({mode:"all"});
-}
-
-completed=()=>{
- this.setState({mode:"completed"});
-}
-
-
+//Clearing completed todos
 clear=()=>{
   this.setState({all:this.state.all.filter(item=>item.done===false)});
 }
 
-count=()=> this.state.all.length;
-countCompleted=()=>this.state.all.filter(item=>item.done===true).length;
-countActive=()=>this.state.all.filter(item=>item.done===false).length;
+//Getting count of filtered array
+count=(mode)=>{
+    switch(mode){
+      case "completed":
+        return this.state.all.filter(item=>item.done===true).length;
+      case "active":
+        return this.state.all.filter(item=>item.done===false).length;
+      default:
+        return this.state.all.length;
+    }
+}
  
   render(){
     return(
         <div className="todoapp">
           <h1 className="heading">todos</h1>
           <div className="main">
-         <div className="top"><span className="dropbtn">
-    {this.count()?<button className="btn" onClick={this.btnClick}><FaChevronDown/></button>:<button className="btn"/>}
-          </span>
-          <input className="input" placeholder="What needs to be done?" value={this.state.newToDo} 
-          onChange={this.handleChange}
-          onKeyPress={this.handleKeypress}></input></div>
-         <div>{this.listToMap().map((item)=>(
-        <div key={item.id}>
-          
-            <input id="toggle"
-            className="toggle" type="checkbox" checked={item.done} onChange={() => this.toggleDone(item)}/>
-            <span>{item.isEdit?<input placeholder="tester" id={item.id} type="text" value={this.state.editToDo} onChange={this.handleEdit} onKeyPress={this.handleKeyEdit} ></input>:
-            <span onDoubleClick={()=>this.edit(item)} className={item.done?"action":"not-action"}>{item.action}</span>}</span>
-            <button onClick={()=>this.delete(item)}>delete</button>
-        </div>
-      ))}</div>
-          <div className="footer">
-            <span>{this.countActive()} {this.countActive()===1?"item":"items"} left</span>
-            <span><button onClick={this.showAll}>All</button></span>
-            <span><button onClick={this.active}>Active</button></span>
-            <span><button onClick={this.completed}>Completed</button></span>
-            <span><button onClick={this.clear}>Clear Completed</button></span>
-            <Button>This is a button</Button>
-          </div>
+         <div className="top">
+          <Button count={this.count} checkAll={this.checkAll}/>
+           <Input value={this.state.newToDo} click={this.handleChange} enter={this.handleKeypress}/>
+         </div>
+         {this.listToMap().map((item)=>(
+        <TodoItem todo={item} toggle={this.toggleDone} value={this.state.editToDo}
+        edit={this.handleEdit} handleEdit={this.handleKeyEdit} editInput={this.edit} delete={this.delete}/> ))}
+        <Footer count={this.count} setMode={this.setMode} clear={this.clear}/>
           </div>
         </div>
     )

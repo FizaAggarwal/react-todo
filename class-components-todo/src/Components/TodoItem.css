@@ -1,0 +1,40 @@
+*:focus{
+    outline: none;
+  }
+
+  .action{
+    text-decoration:line-through;
+    color: grey;
+    opacity: 0.5;
+  }
+  
+  input[type="checkbox"] {
+    -webkit-appearance: none;
+    appearance: none;
+    margin: 0;
+    font: inherit;
+    width: 30px;
+    height: 30px;
+    border: 1px solid grey;
+    border-radius: 50%;
+   display: grid;
+    place-content: center;
+  }
+  
+  input[type="checkbox"]::before {
+    content: '✔';
+    color: green;
+    transform: scale(0);
+  }
+  
+  input[type="checkbox"]:checked::before {
+    content: '✔';
+    color: green;
+    transform: scale(1);
+  }
+
+  
+.todo{
+    display: flex;
+  }
+  
