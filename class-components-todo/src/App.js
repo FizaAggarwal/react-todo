@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import './App.css';
 import uuid from 'react-uuid';
 import { FaChevronDown } from "react-icons/fa";
+import  Button  from "@mui/material/Button";
 
 class App extends Component{
   constructor(props) {
@@ -20,6 +21,14 @@ class App extends Component{
   handleChange=(event)=>{
     this.setState({newToDo:event.target.value});
   };
+
+  handleKeypress = e => {
+    //it triggers by pressing the enter key
+  if (e.key==='Enter') {
+    this.newTodo();
+    this.setState({newToDo:""});
+  }
+};
 
   newTodo=()=>{
     this.setState({
@@ -62,82 +71,40 @@ class App extends Component{
   }
 };
 
-editInput=(item)=>{
-  if(item.isEdit===false){
-    return <span onDoubleClick={()=>this.edit(item)} className="action">{item.action}</span>}
-    else{
-      return <input placeholder="tester" id={item.id} type="text" value={item.action} onChange={this.handleEdit} onKeyPress={this.handleKeyEdit} ></input>
-    }
-}
 
 
-  todoRows=()=>{
+listToMap=()=> {
+  if(this.state.mode==="active")
+  {
+    return this.state.all.filter(item=>item.done===false);
+  }
+  else if(this.state.mode==="completed"){
+    return this.state.all.filter(item=>item.done===true);
+  }
+  else{
+    return this.state.all;
+  }
+  }
 
-    if(this.state.mode==="active"){
-      return  this.state.all.filter(item=>item.done===false).map((item)=>(
-        <div key={item.id}>
-          
-            <input id="toggle"
-            className="toggle" type="checkbox" checked={item.done} onChange={() => this.toggleDone(item)}/>
-            <span>{this.editInput(item)}</span>
-            <button onClick={()=>this.delete(item)}>delete</button>
-        </div>
-      ))}
-
-    else if(this.state.mode=== "completed"){
-     return this.state.all.filter(item=>item.done===true).map((item)=>(
-        <div key={item.id}>
-          
-            <input id="toggle"
-            className="toggle" type="checkbox" checked={item.done} onChange={() => this.toggleDone(item)}/>
-            <span>{this.editInput(item)}</span>
-           <button onClick={()=>this.delete(item)}>delete</button>
-        </div>
-      ))}
-
-    else{
-   return this.state.all.map((item)=>(
-      <div key={item.id} className="todo">
-        
-          <input id="toggle"
-          className="toggle" type="checkbox" checked={item.done} onChange={() => this.toggleDone(item)}/>
-          <span>{this.editInput(item)}</span>
-          <button onClick={()=>this.delete(item)}>delete</button>
-      </div>
-    ))}
-}
 
 edit = (todo) => {
   this.setState({
     all: this.state.all.map((item) =>
       item.action === todo.action ? { ...item, isEdit: !item.isEdit } : item
     ),
+    editToDo: todo.action
   });
 }
   
-    
-     handleKeypress = e => {
-      //it triggers by pressing the enter key
-    if (e.key==='Enter') {
-      this.newTodo();
-      this.setState({newToDo:""});
-    }
-  };
 
   btnClick = () =>{
-    const arr1=this.state.all.filter(item=>{return item.done===true});
-    if(arr1.length<this.state.all.length){
+    if(this.countCompleted()<this.count()){
   this.setState({ all : this.state.all.map((item) =>
-  item = { ...item, done: true }
-),
-}
-  )}
+  item = { ...item, done: true })})
+  }
   else{
     this.setState({ all : this.state.all.map((item) =>
-      item = { ...item, done: false }
-    ),
-    }
-      )
+      item = { ...item, done: false })})
   }
 }
 
@@ -158,32 +125,38 @@ clear=()=>{
   this.setState({all:this.state.all.filter(item=>item.done===false)});
 }
 
-btn=()=>{
-  if(this.state.all.length!==0){
-    return  <button className="btn" onClick={this.btnClick}><FaChevronDown/></button>
-  }
-  else{
-    return <button className="btn" onClick={this.btnClick}></button>
-  }
-}
-
-  
+count=()=> this.state.all.length;
+countCompleted=()=>this.state.all.filter(item=>item.done===true).length;
+countActive=()=>this.state.all.filter(item=>item.done===false).length;
+ 
   render(){
     return(
         <div className="todoapp">
           <h1 className="heading">todos</h1>
           <div className="main">
-         <div className="top"><span className="dropbtn">{this.btn()}</span>
+         <div className="top"><span className="dropbtn">
+    {this.count()?<button className="btn" onClick={this.btnClick}><FaChevronDown/></button>:<button className="btn"/>}
+          </span>
           <input className="input" placeholder="What needs to be done?" value={this.state.newToDo} 
           onChange={this.handleChange}
           onKeyPress={this.handleKeypress}></input></div>
-          <div>{this.todoRows()}</div>
+         <div>{this.listToMap().map((item)=>(
+        <div key={item.id}>
+          
+            <input id="toggle"
+            className="toggle" type="checkbox" checked={item.done} onChange={() => this.toggleDone(item)}/>
+            <span>{item.isEdit?<input placeholder="tester" id={item.id} type="text" value={this.state.editToDo} onChange={this.handleEdit} onKeyPress={this.handleKeyEdit} ></input>:
+            <span onDoubleClick={()=>this.edit(item)} className={item.done?"action":"not-action"}>{item.action}</span>}</span>
+            <button onClick={()=>this.delete(item)}>delete</button>
+        </div>
+      ))}</div>
           <div className="footer">
-            <span>{this.state.all.filter(item=>item.done===false).length} {this.state.all.filter(item=>item.done===false).length===1?"item":"items"} left</span>
+            <span>{this.countActive()} {this.countActive()===1?"item":"items"} left</span>
             <span><button onClick={this.showAll}>All</button></span>
             <span><button onClick={this.active}>Active</button></span>
             <span><button onClick={this.completed}>Completed</button></span>
             <span><button onClick={this.clear}>Clear Completed</button></span>
+            <Button>This is a button</Button>
           </div>
           </div>
         </div>
