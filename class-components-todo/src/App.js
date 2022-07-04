@@ -46,7 +46,7 @@ class App extends Component{
   toggleDone = (todo) =>
   this.setState({
     all: this.state.all.map((item) =>
-      item.action === todo.action ? { ...item, done: !item.done } : item
+      item.id === todo.id ? { ...item, done: !item.done } : item
     ),
   });
 
@@ -59,7 +59,7 @@ class App extends Component{
   edit = (todo) => {
     this.setState({
       all: this.state.all.map((item) =>
-        item.action === todo.action ? { ...item, isEdit: !item.isEdit } : item
+        item.id=== todo.id ? { ...item, isEdit: !item.isEdit } : item
       ),
       editToDo: todo.action
     });
@@ -138,7 +138,7 @@ count=(mode)=>{
  
   render(){
     return(
-        <div className="todoapp">
+        <>
           <h1 className="heading">todos</h1>
           <div className="main">
          <div className="top">
@@ -148,9 +148,9 @@ count=(mode)=>{
          {this.listToMap().map((item)=>(
         <TodoItem todo={item} toggle={this.toggleDone} value={this.state.editToDo}
         edit={this.handleEdit} handleEdit={this.handleKeyEdit} editInput={this.edit} delete={this.delete}/> ))}
-        <Footer count={this.count} setMode={this.setMode} clear={this.clear}/>
-          </div>
-        </div>
+        {this.count("all")?<Footer count={this.count} setMode={this.setMode} clear={this.clear}/>:null}
+         </div>
+        </>
     )
   }
 }

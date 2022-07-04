@@ -1,17 +1,6 @@
-*:focus{
-    outline: none;
-  }
-
-  .action{
-    text-decoration:line-through;
-    color: grey;
-    opacity: 0.5;
-  }
-  
   input[type="checkbox"] {
     -webkit-appearance: none;
     appearance: none;
-    margin: 0;
     font: inherit;
     width: 30px;
     height: 30px;
@@ -19,6 +8,7 @@
     border-radius: 50%;
    display: grid;
     place-content: center;
+    margin:auto 0px auto 6px;
   }
   
   input[type="checkbox"]::before {
@@ -28,13 +18,35 @@
   }
   
   input[type="checkbox"]:checked::before {
-    content: '✔';
-    color: green;
     transform: scale(1);
   }
 
-  
-.todo{
-    display: flex;
+   .edit{
+    font-size:25px;
+    text-align: left;
+    padding:22px;
+    margin-left: 30px;
+    width:450px;
   }
+
+  #action{
+    text-decoration:line-through;
+    color: grey;
+    opacity: 0.5;
+  }
+
+  .list{
+    font-size: 25px;
+    padding-left: 22px;
+    margin: auto 0px;
+    width:400px;
+  }
+  .delete{
+    background-color: white;
+    border: none;
+    color: rgba(175, 47, 47);
+    margin: auto 10px auto auto;
+    display: none;
+  }
+
   

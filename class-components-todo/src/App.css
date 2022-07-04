@@ -2,27 +2,22 @@
   font-size: 100px;
   font-weight: 500;
   text-align: center;
-  margin-top:5px;
-  margin-bottom:5px;
+  margin: 5px;
   color: rgba(175, 47, 47, 0.25);
 }
 
-*:focus{
-  outline: none;
-}
-
-
-.top{
-  border: 1px solid grey;
- /* width:500px;*/
-  display: flex;
-  margin-left: auto;
-  margin-right: auto;
-}
 
 .main{
   display:flex;
   flex-direction: column;
-  margin-right: auto;
-  margin-left: auto;
+  margin:auto;
 }
+
+.top{
+  border: 1px solid grey;
+  width:600px;
+  height:60px;
+  display: flex;
+  margin: auto;
+}
+
