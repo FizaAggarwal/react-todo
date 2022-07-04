@@ -26,7 +26,7 @@
     text-align: left;
     padding:22px;
     margin-left: 30px;
-    width:450px;
+    width:550px;
   }
 
   #action{
@@ -37,9 +37,9 @@
 
   .list{
     font-size: 25px;
-    padding-left: 22px;
     margin: auto 0px;
     width:400px;
+    padding: 15px 15px 15px 22px;
   }
   .delete{
     background-color: white;

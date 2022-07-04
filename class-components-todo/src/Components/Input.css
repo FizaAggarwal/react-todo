@@ -6,6 +6,7 @@
     text-align: left;
     font-size:25px;
     border: none;
+    width:550px;
   }
   .input::placeholder{
     opacity: 0.3;

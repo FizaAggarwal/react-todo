@@ -7,9 +7,10 @@ import { styled } from '@mui/material/styles';
 const CustomizedBox= styled(Box)`
     display: flex;
     border: 1px solid grey;
-    height:60px;
+    min-height:60px;
     width:600px;
     align-self: center;
+    height:auto;
 
     :hover{
         .delete{
