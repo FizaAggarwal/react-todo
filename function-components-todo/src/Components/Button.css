@@ -1,0 +1,14 @@
+.btn{
+    color: rgba(128,128,128);
+    font-size: large;
+    margin:auto 0px;
+    height:40px;
+    width:40px;
+    background-color: white;
+    border: none;
+    padding-top: 10px;
+  }
+  
+  #light{
+    opacity:0.3;
+  }

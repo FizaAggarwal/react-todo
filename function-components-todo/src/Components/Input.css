@@ -1,0 +1,17 @@
+*:focus{
+    outline: none;
+  }
+  .input{
+    padding: 16px;
+    text-align: left;
+    font-size:25px;
+    border: none;
+    width:550px;
+  }
+  .input::placeholder{
+    opacity: 0.3;
+    font-weight: bold;
+    color: rgba(128,128,128);
+    font-family:"Marker Felt, fantasy";
+    font-style: italic;
+  }
