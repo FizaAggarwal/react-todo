@@ -1,5 +1,5 @@
 import './App.css';
-import { useState } from "react";
+import { useState,useCallback, useMemo } from "react";
 import uuid from 'react-uuid';
 import Button from "./Components/Button";
 import Input from "./Components/Input";
@@ -13,93 +13,76 @@ function App() {
    const [mode,setMode]=useState("all");
    const [editToDo,setEditToDo]=useState("");
 
-   //adding todo after pressing enter
-   const addTodo=(e)=>{
-          if(e.key==='Enter'){
-            setAll(ps => [...ps,{id:uuid(),action:newToDo,done:false,isEdit:false}]);
-            setNewToDo("");
-          }
-   };
+   //adding todo
+   const addTodo=useCallback(()=>{setAll([...all,{id:uuid(),action:newToDo,done:false,isEdit:false}]);
+            setNewToDo("");},[all,newToDo]);
 
-   //Getting count of filtered array
-  const count=(mode)=>{
-  switch(mode){
-    case "completed":
-      return all.filter(item=>item.done===true).length;
-    case "active":
-      return all.filter(item=>item.done===false).length;
-    default:
-      return all.length;
-  }
-};
+   //count of all list
+   const All=useMemo(()=>[...all].length,[all]);
+          
+   //count of completed todos
+   const Completed=useMemo(()=>[...all].filter(item=>item.done===true).length,[all]);
 
-  //function for complete all button
-  const checkAll = () =>{
-    if(count("completed")<count()){
-      setAll(all.map(item=>item={...item,done:true}));
-  }
-  else{
-      setAll(all.map(item=>item={...item,done:false}));
-  }
-};
+   //function for complete all button
+   const checkAll=useCallback(()=>{
+    const temp=(Completed<All)?[...all].map(item=>item={...item,done:true}):[...all].map(item=>item={...item,done:false});
+    setAll(temp)},[Completed,All,all]);
 
-//giving filtered array
-const listToMap=()=> {
+  //giving filtered array
+  const listToMap=useMemo(()=> {
   if(mode==="active")
-  {
-    return all.filter(item=>item.done===false);
-  }
-  else if(mode==="completed"){
-    return all.filter(item=>item.done===true);
-  }
-  else{
-    return all;
-  }
-  };
+      { return [...all].filter(item=>item.done===false);}
+  else if(mode==="completed")
+      { return [...all].filter(item=>item.done===true);}
+  else
+      {return all;}
+  },[mode,all]);
 
-  const toggleDone = (todo) =>
-  setAll(all.map(item=>item.id===todo.id?{...item,done:!item.done}:item));
+  //count of todos left
+  const Left=useMemo(()=>[...all].filter(item=>item.done===false).length,[all]);
 
-  const handleKeyEdit = (id,e) => {
-    //it triggers by pressing the enter key
-  if (e.key==='Enter') {
-    setAll(all.map(item=>item.id===id?{...item,action:editToDo,isEdit:false}:item));
-    setEditToDo("");
-  }
-};
+  //to (un)check a todo
+  const toggleDone = useCallback((todo) =>
+  setAll([...all].map(item=>item.id===todo.id?{...item,done:!item.done}:item)),[all]);
 
-const edit = (todo) => {
-  setAll(all.map(item=>item.id===todo.id?{...item,isEdit:!item.isEdit}:item));
+  //edit todo after pressing enter
+  const handleKeyEdit = useCallback((e,id) => {
+    if(e.key==='Enter'){
+    setAll([...all].map(item=>item.id===id?{...item,action:editToDo,isEdit:false}:item));
+    setEditToDo("");}
+  },[all,editToDo]);
+
+  //to chnage todo list to edit input
+  const edit = useCallback((todo) => {
+  setAll([...all].map(item=>item.id===todo.id?{...item,isEdit:!item.isEdit}:item));
   setEditToDo(todo.action);
-}
+  },[all]); 
 
-const deleteTodo=(todo)=>{
-  setAll(all.filter(item=>all.indexOf(item)!==all.indexOf(todo)));
-}
+  //to delete todo
+  const deleteTodo=useCallback((todo)=>{
+  setAll([...all].filter(item=>all.indexOf(item)!==all.indexOf(todo)));},[all]);
 
-const changeMode=(mode)=>{
-  setMode(mode);
-}
+  //to change mode
+  const changeMode=(mode)=>setMode(mode);
 
-const clear=()=>{
-  setAll(all.filter(item=>item.done===false));
-}
+  //to clear the completed todos
+  const clear=useCallback(()=>setAll([...all].filter(item=>item.done===false)),[all]);
 
   return (
     <>
      <h1 className="heading">todos</h1>
      <div className="main">
          <div className="top">
-         <Button count={count} checkAll={checkAll}/>
-         <Input value={newToDo} change={(e)=>setNewToDo(e.target.value)} enter={addTodo}/>
+         <Button countAll={All} Items={Completed} checkAll={checkAll}/>
+         <Input value={newToDo} change={(e)=>setNewToDo(e.target.value)} enter={e=>e.key==='Enter'&& addTodo()}/>
          </div>
-         {listToMap().map((item)=>(
+         {listToMap.map((item)=>(
         <TodoItem todo={item} toggle={toggleDone} value={editToDo}
         change={(e)=>setEditToDo(e.target.value)} enter={handleKeyEdit} editInput={edit} delete={deleteTodo}/> ))}
-        {count()?<Footer count={count} change={changeMode} clear={clear}/>:null}
+        {All?<Footer Left={Left} Completed={Completed} change={changeMode} clear={clear}/>:null}
          </div>
     </>
   );
-}
+         }
 
 export default App;
