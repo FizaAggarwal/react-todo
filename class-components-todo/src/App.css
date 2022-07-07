@@ -6,18 +6,3 @@
   color: rgba(175, 47, 47, 0.25);
 }
 
-
-.main{
-  display:flex;
-  flex-direction: column;
-  margin:auto;
-}
-
-.top{
-  border: 1px solid grey;
-  width:600px;
-  height:60px;
-  display: flex;
-  margin: auto;
-}
-

@@ -1,15 +1,20 @@
 import React, {Component} from 'react';
-import './Input.css';
+import Input from '@mui/material/Input';
+import { styled } from '@mui/material/styles';
 
-class Input extends Component{
+const MyInput=styled(Input)`
+    font-size:25px;
+    width:550px;
+`;
+
+class InputContainer extends Component{
     render(){
         return(
              
-          <input className="input" placeholder="What needs to be done?" value={this.props.value} 
-          onChange={this.props.click}
-          onKeyPress={this.props.enter}></input>
+          <MyInput placeholder="What needs to be done?" disableUnderline={true} value={this.props.value} onChange={this.props.click}
+          onKeyPress={this.props.enter}></MyInput>
         )
     }
 }
 
-export default Input;
+export default InputContainer;

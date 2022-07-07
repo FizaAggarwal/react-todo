@@ -2,9 +2,19 @@ import React, { Component } from "react";
 import './App.css';
 import uuid from 'react-uuid';
 import TodoItem from './Components/TodoItem';
-import Input from "./Components/Input";
+import InputContainer from "./Components/Input";
 import Footer from "./Components/Footer";
-import Button from "./Components/Button";
+import ArrowDown from "./Components/ArrowDown";
+import Box from '@mui/material/Box';
+import { styled } from '@mui/material/styles';
+
+const Top=styled(Box)`
+  border: 1px solid grey;
+  width:600px;
+  height:60px;
+  display: flex;
+  margin: auto;
+`;
 
 class App extends Component{
   constructor(props) {
@@ -140,16 +150,14 @@ count=(mode)=>{
     return(
         <>
           <h1 className="heading">todos</h1>
-          <div className="main">
-         <div className="top">
-          <Button count={this.count} checkAll={this.checkAll}/>
-           <Input value={this.state.newToDo} click={this.handleChange} enter={this.handleKeypress}/>
-         </div>
+          <Top>
+          <ArrowDown count={this.count} checkAll={this.checkAll}/>
+          <InputContainer value={this.state.newToDo} click={this.handleChange} enter={this.handleKeypress}/>
+          </Top>
          {this.listToMap().map((item)=>(
         <TodoItem todo={item} toggle={this.toggleDone} value={this.state.editToDo}
         edit={this.handleEdit} handleEdit={this.handleKeyEdit} editInput={this.edit} delete={this.delete}/> ))}
         {this.count("all")?<Footer count={this.count} setMode={this.setMode} clear={this.clear}/>:null}
-         </div>
         </>
     )
   }
