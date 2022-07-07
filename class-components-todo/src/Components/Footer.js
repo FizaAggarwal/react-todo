@@ -3,7 +3,7 @@ import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 
-const MyBox=styled(Box)`
+const CustomBox=styled(Box)`
 width:600px;
 height:60px;
 margin: 0px auto;
@@ -44,7 +44,7 @@ class Footer extends Component{
     
     render(){
         return(
-            <MyBox>
+            <CustomBox>
             <Items>{this.props.count("active")} {this.props.count("active")===1?"item":"items"} left</Items>
             <Buttons>
             <CustomizedButton onClick={()=>this.props.setMode("all")} >All</CustomizedButton>
@@ -53,9 +53,10 @@ class Footer extends Component{
             </Buttons>
             {this.props.count("completed")?<ClearButton onClick={this.props.clear}>
                 Clear Completed</ClearButton>:null}
-             </MyBox>
+             </CustomBox>
         )
     }
 }
 
 export default Footer;
+

@@ -29,7 +29,7 @@ const Circle=styled(CircleOutlinedIcon)`
     font-size:30px;
 `;
 
-const MyInput=styled(Input)`
+const CustommInput=styled(Input)`
     font-size:25px;
     width:550px;
     padding:10px;
@@ -41,6 +41,7 @@ const List=styled(Box)`
     font-size: 25px;
     padding:15px 0px;
     color:rgb(105,105,105);
+    width:500px;
 `;
 
 const Delete=styled(Button)`
@@ -57,7 +58,7 @@ class TodoItem extends Component{
           {this.props.todo.isEdit?null:<Button onClick={() => this.props.toggle(this.props.todo)}>
                 {this.props.todo.done?<TickCircle/>:<Circle/>}</Button>}
           {this.props.todo.isEdit?
-            <MyInput id={this.props.todo.id} type="text" disableUnderline={true} value={this.props.value}
+            <CustommInput id={this.props.todo.id} type="text" disableUnderline={true} value={this.props.value}
              onChange={this.props.edit} onKeyPress={this.props.handleEdit} />:
             <List sx={{textDecoration : this.props.todo.done ? 'line-through' : 'none'}} 
             onDoubleClick={()=>this.props.editInput(this.props.todo)} >{this.props.todo.action}</List>}
@@ -68,3 +69,4 @@ class TodoItem extends Component{
 }
 
 export default TodoItem;
+

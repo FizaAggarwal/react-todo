@@ -148,7 +148,7 @@ count=(mode)=>{
  
   render(){
     return(
-        <>
+        <Box>
           <h1 className="heading">todos</h1>
           <Top>
           <ArrowDown count={this.count} checkAll={this.checkAll}/>
@@ -158,10 +158,11 @@ count=(mode)=>{
         <TodoItem todo={item} toggle={this.toggleDone} value={this.state.editToDo}
         edit={this.handleEdit} handleEdit={this.handleKeyEdit} editInput={this.edit} delete={this.delete}/> ))}
         {this.count("all")?<Footer count={this.count} setMode={this.setMode} clear={this.clear}/>:null}
-        </>
+        </Box>
     )
   }
 }
 
 
 export default App;
+
