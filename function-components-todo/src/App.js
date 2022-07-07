@@ -1,10 +1,20 @@
 import './App.css';
 import { useState,useCallback, useMemo } from "react";
 import uuid from 'react-uuid';
-import Button from "./Components/Button";
-import Input from "./Components/Input";
+import ArrowDown from "./Components/Button";
+import InputContainer from "./Components/Input";
 import TodoItem from "./Components/TodoItem";
 import Footer from "./Components/Footer";
+import Box from '@mui/material/Box';
+import { styled } from '@mui/material/styles';
+
+const Top=styled(Box)`
+  border: 1px solid grey;
+  width:600px;
+  height:60px;
+  display: flex;
+  margin: auto;
+`;
 
 function App() {
   //initial state
@@ -69,20 +79,19 @@ function App() {
   const clear=useCallback(()=>setAll([...all].filter(item=>item.done===false)),[all]);
 
   return (
-    <>
+    <Box>
      <h1 className="heading">todos</h1>
-     <div className="main">
-         <div className="top">
-         <Button countAll={All} Items={Completed} checkAll={checkAll}/>
-         <Input value={newToDo} change={(e)=>setNewToDo(e.target.value)} enter={e=>e.key==='Enter'&& addTodo()}/>
-         </div>
+         <Top>
+         <ArrowDown countAll={All} Items={Completed} checkAll={checkAll}/>
+         <InputContainer value={newToDo} change={(e)=>setNewToDo(e.target.value)} enter={e=>e.key==='Enter'&& addTodo()}/>
+         </Top>
          {listToMap.map((item)=>(
         <TodoItem todo={item} toggle={toggleDone} value={editToDo}
         change={(e)=>setEditToDo(e.target.value)} enter={handleKeyEdit} editInput={edit} delete={deleteTodo}/> ))}
         {All?<Footer Left={Left} Completed={Completed} change={changeMode} clear={clear}/>:null}
-         </div>
-    </>
+    </Box>
   );
          }
 
 export default App;
+

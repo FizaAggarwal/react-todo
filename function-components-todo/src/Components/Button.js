@@ -1,13 +1,18 @@
 import { FaChevronDown } from "react-icons/fa";
-import './Button.css';
+import Button from '@mui/material/Button';
+import { styled } from '@mui/material/styles';
 
-function Button(props){
+const CustomButton=styled(Button)`
+    color: rgba(128,128,128);
+`;
+
+function ArrowDown(props){
     return(
         <>{props.countAll?
-        <button className="btn" id={props.countAll===props.Items?"dark":"light"}
-         onClick={props.checkAll}>
-  <FaChevronDown/></button>:<button className="btn"/>}</>
+        <CustomButton onClick={props.checkAll}>
+  <FaChevronDown/></CustomButton>:<CustomButton/>}</>
     );
 }
 
-export default Button;
+export default ArrowDown;
+
