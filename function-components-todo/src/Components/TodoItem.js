@@ -54,7 +54,7 @@ function TodoItem(props){
         <CustomizedBox>
           {props.todo.isEdit?null:<Button onClick={() => props.toggle(props.todo)}>
                 {props.todo.done?<TickCircle/>:<Circle/>}</Button>}
-        {props.todo.isEdit?<CustommInput type="text" value={props.value}
+        {props.todo.isEdit?<CustommInput type="text" disableUnderline={true} value={props.value}
          onChange={props.change} onKeyPress={(e)=>props.enter(e,props.todo.id)} />:
          <List sx={{textDecoration : props.todo.done ? 'line-through' : 'none'}} 
           onDoubleClick={()=>props.editInput(props.todo)} >{props.todo.action}</List>}
