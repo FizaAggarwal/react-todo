@@ -1,21 +1,21 @@
 export const addTodo = (value) => {
   return {
     type: "ADD_TODO",
-    value,
+    payload: { value: value },
   };
 };
 
 export const newTodo = (value) => {
   return {
     type: "NEW_TODO",
-    value,
+    payload: { value: value },
   };
 };
 
 export const editTodo = (value) => {
   return {
     type: "EDIT_TODO",
-    value,
+    payload: { value: value },
   };
 };
 
@@ -29,7 +29,7 @@ export const checkAll = (completed, list) => {
 export const toggleDone = (id) => {
   return {
     type: "TOGGLE_COMPLETE",
-    id,
+    payload: { id: id },
   };
 };
 
@@ -50,14 +50,14 @@ export const replace = (id, value) => {
 export const deleteTodo = (id) => {
   return {
     type: "DELETE",
-    id,
+    payload: { id: id },
   };
 };
 
 export const clickFilter = (mode) => {
   return {
     type: "FILTER",
-    mode,
+    payload: { mode: mode },
   };
 };
 

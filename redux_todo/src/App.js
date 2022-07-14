@@ -72,15 +72,23 @@ function App() {
     [all]
   );
 
+  const list = count("all");
+  const completed = count("completed");
+  const active = count("active");
+
   //for adding todo
   const addItem = useCallback(
-    (newToDo) => dispatch(addTodo(newToDo)),
+    (e, newToDo) => {
+      e.key === "Enter" && dispatch(addTodo(newToDo));
+    },
     [dispatch]
   );
 
   //for edit input
   const editItem = useCallback(
-    (id, editToDo) => dispatch(edit(id, editToDo)),
+    (e, id, editToDo) => {
+      e.key === "Enter" && dispatch(edit(id, editToDo));
+    },
     [dispatch]
   );
 
@@ -92,19 +100,19 @@ function App() {
 
   //to complete all todos
   const clickAll = useCallback(
-    () => dispatch(checkAll(count("completed"), count("all"))),
-    [dispatch, count]
+    () => dispatch(checkAll(completed, list)),
+    [dispatch, completed, list]
   );
 
   return (
     <Box>
       <Heading>todos</Heading>
       <Top>
-        <ArrowDown countAll={count("all")} checkAll={clickAll} />
+        <ArrowDown countAll={list} checkAll={clickAll} />
         <InputContainer
           value={newToDo}
           change={(e) => dispatch(newTodo(e.target.value))}
-          enter={(e) => e.key === "Enter" && addItem(newToDo)}
+          enter={(e) => addItem(e, newToDo)}
         />
       </Top>
       {listToMap.map((item) => (
@@ -114,14 +122,14 @@ function App() {
           editInput={() => replaceItem(item.id, item.action)}
           value={editToDo}
           change={(e) => dispatch(editTodo(e.target.value))}
-          enter={(e) => e.key === "Enter" && editItem(item.id, editToDo)}
+          enter={(e) => editItem(e, item.id, editToDo)}
           delete={() => dispatch(deleteTodo(item.id))}
         />
       ))}
-      {count("all") > 0 && (
+      {list > 0 && (
         <Footer
-          left={count("active")}
-          completed={count("completed")}
+          left={active}
+          completed={completed}
           click={(mode) => dispatch(clickFilter(mode))}
           clear={() => dispatch(clear())}
         />

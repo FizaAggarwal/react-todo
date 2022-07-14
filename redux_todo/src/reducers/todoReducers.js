@@ -16,7 +16,7 @@ const todoReducers = (state = initialState, action) => {
           ...state.all,
           {
             id: uuid(),
-            action: action.value,
+            action: action.payload.value,
             done: false,
             isEdit: false,
           },
@@ -27,13 +27,13 @@ const todoReducers = (state = initialState, action) => {
     case "NEW_TODO":
       return {
         ...state,
-        newToDo: action.value,
+        newToDo: action.payload.value,
       };
 
     case "EDIT_TODO":
       return {
         ...state,
-        editToDo: action.value,
+        editToDo: action.payload.value,
       };
 
     case "CLICK_ALL":
@@ -48,7 +48,7 @@ const todoReducers = (state = initialState, action) => {
 
     case "TOGGLE_COMPLETE":
       const toggle = state.all.map((item) =>
-        item.id === action.id ? { ...item, done: !item.done } : item
+        item.id === action.payload.id ? { ...item, done: !item.done } : item
       );
       return {
         ...state,
@@ -78,7 +78,7 @@ const todoReducers = (state = initialState, action) => {
       };
 
     case "DELETE":
-      const filter = state.all.filter((item) => item.id !== action.id);
+      const filter = state.all.filter((item) => item.id !== action.payload.id);
       return {
         ...state,
         all: [...filter],
@@ -87,7 +87,7 @@ const todoReducers = (state = initialState, action) => {
     case "FILTER":
       return {
         ...state,
-        mode: action.mode,
+        mode: action.payload.mode,
       };
 
     case "CLEAR_ALL":
