@@ -47,9 +47,13 @@ function Footer(props) {
         {props.left} {props.left === 1 ? "item" : "items"} left
       </Items>
       <Buttons>
-        <CustomizedButton onClick={props.all}>All</CustomizedButton>
-        <CustomizedButton onClick={props.active}>Active</CustomizedButton>
-        <CustomizedButton onClick={props.clickcompleted}>
+        <CustomizedButton onClick={() => props.click("all")}>
+          All
+        </CustomizedButton>
+        <CustomizedButton onClick={() => props.click("active")}>
+          Active
+        </CustomizedButton>
+        <CustomizedButton onClick={() => props.click("completed")}>
           Completed
         </CustomizedButton>
       </Buttons>

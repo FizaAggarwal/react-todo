@@ -5,7 +5,7 @@ import InputContainer from "./Components/InputContainer";
 import TodoItem from "./Components/TodoItem";
 import Footer from "./Components/Footer";
 import { useSelector, useDispatch } from "react-redux";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 import {
   addTodo,
   checkAll,
@@ -13,10 +13,10 @@ import {
   edit,
   replace,
   deleteTodo,
-  clickAll,
-  clickActive,
-  clickCompleted,
   clear,
+  newTodo,
+  editTodo,
+  clickFilter,
 } from "./actions/index";
 
 const Heading = styled(Box)`
@@ -36,88 +36,93 @@ const Top = styled(Box)`
 `;
 
 function App() {
-  //get all from state
+  //get state from redux
   const all = useSelector((state) => state.todoReducers.all);
-
-  //get mode from state
   const mode = useSelector((state) => state.todoReducers.mode);
-
-  //initial state for inputs
-  const [newToDo, setNewToDo] = useState("");
-  const [editToDo, setEditToDo] = useState("");
+  const newToDo = useSelector((state) => state.todoReducers.newToDo);
+  const editToDo = useSelector((state) => state.todoReducers.editToDo);
 
   //to dispatch action
   const dispatch = useDispatch();
 
   //giving filtered array
   const listToMap = useMemo(() => {
-    if (mode === "active") {
-      return [...all].filter((item) => item.done === false);
-    } else if (mode === "completed") {
-      return [...all].filter((item) => item.done === true);
-    } else {
-      return all;
+    switch (mode) {
+      case "active":
+        return [...all].filter((item) => item.done === false);
+      case "completed":
+        return [...all].filter((item) => item.done === true);
+      default:
+        return all;
     }
   }, [mode, all]);
 
-  //count of all list
-  const list = useMemo(() => all.length, [all]);
-
-  //count of completed todos
-  const completed = useMemo(
-    () => all.filter((item) => item.done === true).length,
+  //giving count of array according to mode
+  const count = useCallback(
+    (mode) => {
+      switch (mode) {
+        case "active":
+          return [...all].filter((item) => item.done === false).length;
+        case "completed":
+          return [...all].filter((item) => item.done === true).length;
+        default:
+          return all.length;
+      }
+    },
     [all]
   );
 
-  //count of todos left
-  const left = useMemo(
-    () => all.filter((item) => item.done === false).length,
-    [all]
+  //for adding todo
+  const addItem = useCallback(
+    (newToDo) => dispatch(addTodo(newToDo)),
+    [dispatch]
+  );
+
+  //for edit input
+  const editItem = useCallback(
+    (id, editToDo) => dispatch(edit(id, editToDo)),
+    [dispatch]
+  );
+
+  //to replace todo
+  const replaceItem = useCallback(
+    (id, action) => dispatch(replace(id, action)),
+    [dispatch]
+  );
+
+  //to complete all todos
+  const clickAll = useCallback(
+    () => dispatch(checkAll(count("completed"), count("all"))),
+    [dispatch, count]
   );
 
   return (
     <Box>
       <Heading>todos</Heading>
       <Top>
-        <ArrowDown
-          countAll={list}
-          checkAll={() => dispatch(checkAll(completed, list))}
-        />
+        <ArrowDown countAll={count("all")} checkAll={clickAll} />
         <InputContainer
           value={newToDo}
-          change={(e) => setNewToDo(e.target.value)}
-          enter={(e) => {
-            if (e.key === "Enter") {
-              return dispatch(addTodo(newToDo)), setNewToDo("");
-            }
-          }}
+          change={(e) => dispatch(newTodo(e.target.value))}
+          enter={(e) => e.key === "Enter" && addItem(newToDo)}
         />
       </Top>
       {listToMap.map((item) => (
         <TodoItem
           todo={item}
           toggle={() => dispatch(toggleDone(item.id))}
-          editInput={() => {
-            dispatch(replace(item.id));
-            setEditToDo(item.action);
-          }}
+          editInput={() => replaceItem(item.id, item.action)}
           value={editToDo}
-          change={(e) => setEditToDo(e.target.value)}
-          enter={(e) => {
-            if (e.key === "Enter") {
-              return dispatch(edit(item.id, editToDo)), setEditToDo("");
-            }
-          }}
+          change={(e) => dispatch(editTodo(e.target.value))}
+          enter={(e) => e.key === "Enter" && editItem(item.id, editToDo)}
           delete={() => dispatch(deleteTodo(item.id))}
         />
       ))}
-      {list > 0 && (
+      {count("all") > 0 && (
         <Footer
-          left={left}
-          completed={completed}
-          all={() => dispatch(clickAll())}
-          active={() => dispatch(clickActive())}
-          clickcompleted={() => dispatch(clickCompleted())}
+          left={count("active")}
+          completed={count("completed")}
+          click={(mode) => dispatch(clickFilter(mode))}
           clear={() => dispatch(clear())}
         />
       )}

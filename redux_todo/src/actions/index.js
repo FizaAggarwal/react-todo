@@ -5,17 +5,30 @@ export const addTodo = (value) => {
   };
 };
 
+export const newTodo = (value) => {
+  return {
+    type: "NEW_TODO",
+    value,
+  };
+};
+
+export const editTodo = (value) => {
+  return {
+    type: "EDIT_TODO",
+    value,
+  };
+};
+
 export const checkAll = (completed, list) => {
   return {
     type: "CLICK_ALL",
-    completed,
-    list,
+    payload: { completed: completed, list: list },
   };
 };
 
 export const toggleDone = (id) => {
   return {
-    type: "TOGGLE",
+    type: "TOGGLE_COMPLETE",
     id,
   };
 };
@@ -23,15 +36,14 @@ export const toggleDone = (id) => {
 export const edit = (id, editToDo) => {
   return {
     type: "EDIT",
-    id,
-    editToDo,
+    payload: { id: id, editToDo: editToDo },
   };
 };
 
-export const replace = (id) => {
+export const replace = (id, value) => {
   return {
     type: "REPLACE",
-    id,
+    payload: { id: id, value: value },
   };
 };
 
@@ -42,21 +54,10 @@ export const deleteTodo = (id) => {
   };
 };
 
-export const clickAll = () => {
+export const clickFilter = (mode) => {
   return {
-    type: "ALL",
-  };
-};
-
-export const clickActive = () => {
-  return {
-    type: "ACTIVE",
-  };
-};
-
-export const clickCompleted = () => {
-  return {
-    type: "COMPLETED",
+    type: "FILTER",
+    mode,
   };
 };
 

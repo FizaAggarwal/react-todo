@@ -3,6 +3,8 @@ import { v4 as uuid } from "uuid";
 const initialState = {
   all: [],
   mode: "all",
+  newToDo: "",
+  editToDo: "",
 };
 
 const todoReducers = (state = initialState, action) => {
@@ -19,11 +21,24 @@ const todoReducers = (state = initialState, action) => {
             isEdit: false,
           },
         ],
+        newToDo: "",
+      };
+
+    case "NEW_TODO":
+      return {
+        ...state,
+        newToDo: action.value,
+      };
+
+    case "EDIT_TODO":
+      return {
+        ...state,
+        editToDo: action.value,
       };
 
     case "CLICK_ALL":
       const temp =
-        action.completed < action.list
+        action.payload.completed < action.payload.list
           ? state.all.map((item) => (item = { ...item, done: true }))
           : state.all.map((item) => (item = { ...item, done: false }));
       return {
@@ -31,7 +46,7 @@ const todoReducers = (state = initialState, action) => {
         all: [...temp],
       };
 
-    case "TOGGLE":
+    case "TOGGLE_COMPLETE":
       const toggle = state.all.map((item) =>
         item.id === action.id ? { ...item, done: !item.done } : item
       );
@@ -42,22 +57,24 @@ const todoReducers = (state = initialState, action) => {
 
     case "EDIT":
       const edittodo = state.all.map((item) =>
-        item.id === action.id
-          ? { ...item, action: action.editToDo, isEdit: false }
+        item.id === action.payload.id
+          ? { ...item, action: action.payload.editToDo, isEdit: false }
           : item
       );
       return {
         ...state,
         all: [...edittodo],
+        editToDo: "",
       };
 
     case "REPLACE":
-      const isedit = state.all.map((item) =>
-        item.id === action.id ? { ...item, isEdit: !item.isEdit } : item
+      const isEdit = state.all.map((item) =>
+        item.id === action.payload.id ? { ...item, isEdit: !item.isEdit } : item
       );
       return {
         ...state,
-        all: [...isedit],
+        all: [...isEdit],
+        editToDo: action.payload.value,
       };
 
     case "DELETE":
@@ -67,22 +84,10 @@ const todoReducers = (state = initialState, action) => {
         all: [...filter],
       };
 
-    case "ALL":
+    case "FILTER":
       return {
         ...state,
-        mode: "all",
-      };
-
-    case "ACTIVE":
-      return {
-        ...state,
-        mode: "active",
-      };
-
-    case "COMPLETED":
-      return {
-        ...state,
-        mode: "completed",
+        mode: action.mode,
       };
 
     case "CLEAR_ALL":
