@@ -37,10 +37,8 @@ const Top = styled(Box)`
 
 function App() {
   //get state from redux
-  const all = useSelector((state) => state.todoReducers.all);
-  const mode = useSelector((state) => state.todoReducers.mode);
-  const newToDo = useSelector((state) => state.todoReducers.newToDo);
-  const editToDo = useSelector((state) => state.todoReducers.editToDo);
+  const initial = useSelector((state) => state.todoReducers);
+  const { all, mode, newToDo, editToDo } = initial;
 
   //to dispatch action
   const dispatch = useDispatch();

@@ -1,4 +1,16 @@
 import { v4 as uuid } from "uuid";
+import {
+  ADD,
+  NEW,
+  EDIT_ITEM,
+  ALL,
+  TOGGLE,
+  EDIT,
+  REPLACE,
+  DELETE,
+  FILTER,
+  CLEAR,
+} from "../actions/actionTypes";
 
 const initialState = {
   all: [],
@@ -9,7 +21,7 @@ const initialState = {
 
 const todoReducers = (state = initialState, action) => {
   switch (action.type) {
-    case "ADD_TODO":
+    case ADD:
       return {
         ...state,
         all: [
@@ -24,38 +36,38 @@ const todoReducers = (state = initialState, action) => {
         newToDo: "",
       };
 
-    case "NEW_TODO":
+    case NEW:
       return {
         ...state,
         newToDo: action.payload.value,
       };
 
-    case "EDIT_TODO":
+    case EDIT_ITEM:
       return {
         ...state,
         editToDo: action.payload.value,
       };
 
-    case "CLICK_ALL":
+    case ALL:
       const temp =
         action.payload.completed < action.payload.list
           ? state.all.map((item) => (item = { ...item, done: true }))
           : state.all.map((item) => (item = { ...item, done: false }));
       return {
         ...state,
-        all: [...temp],
+        all: temp,
       };
 
-    case "TOGGLE_COMPLETE":
+    case TOGGLE:
       const toggle = state.all.map((item) =>
         item.id === action.payload.id ? { ...item, done: !item.done } : item
       );
       return {
         ...state,
-        all: [...toggle],
+        all: toggle,
       };
 
-    case "EDIT":
+    case EDIT:
       const edittodo = state.all.map((item) =>
         item.id === action.payload.id
           ? { ...item, action: action.payload.editToDo, isEdit: false }
@@ -63,38 +75,38 @@ const todoReducers = (state = initialState, action) => {
       );
       return {
         ...state,
-        all: [...edittodo],
+        all: edittodo,
         editToDo: "",
       };
 
-    case "REPLACE":
+    case REPLACE:
       const isEdit = state.all.map((item) =>
         item.id === action.payload.id ? { ...item, isEdit: !item.isEdit } : item
       );
       return {
         ...state,
-        all: [...isEdit],
+        all: isEdit,
         editToDo: action.payload.value,
       };
 
-    case "DELETE":
+    case DELETE:
       const filter = state.all.filter((item) => item.id !== action.payload.id);
       return {
         ...state,
-        all: [...filter],
+        all: filter,
       };
 
-    case "FILTER":
+    case FILTER:
       return {
         ...state,
         mode: action.payload.mode,
       };
 
-    case "CLEAR_ALL":
+    case CLEAR:
       const filterarray = state.all.filter((item) => item.done === false);
       return {
         ...state,
-        all: [...filterarray],
+        all: filterarray,
       };
 
     default:
