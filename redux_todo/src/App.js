@@ -44,35 +44,22 @@ function App() {
   const dispatch = useDispatch();
 
   //giving filtered array
-  const listToMap = useMemo(() => {
-    switch (mode) {
-      case "active":
-        return [...all].filter((item) => item.done === false);
-      case "completed":
-        return [...all].filter((item) => item.done === true);
-      default:
-        return all;
-    }
+  const { listToMap, list, completed, active } = useMemo(() => {
+    const activeArray = [...all].filter((item) => item.done === false);
+    const completeArray = [...all].filter((item) => item.done === true);
+
+    return {
+      listToMap:
+        mode === "active"
+          ? activeArray
+          : mode === "completed"
+          ? completeArray
+          : all,
+      list: all.length,
+      completed: completeArray.length,
+      active: activeArray.length,
+    };
   }, [mode, all]);
-
-  //giving count of array according to mode
-  const count = useCallback(
-    (mode) => {
-      switch (mode) {
-        case "active":
-          return [...all].filter((item) => item.done === false).length;
-        case "completed":
-          return [...all].filter((item) => item.done === true).length;
-        default:
-          return all.length;
-      }
-    },
-    [all]
-  );
-
-  const list = count("all");
-  const completed = count("completed");
-  const active = count("active");
 
   //for adding todo
   const addItem = useCallback(
@@ -115,6 +102,7 @@ function App() {
       </Top>
       {listToMap.map((item) => (
         <TodoItem
+          key={item.id}
           todo={item}
           toggle={() => dispatch(toggleDone(item.id))}
           editInput={() => replaceItem(item.id, item.action)}
